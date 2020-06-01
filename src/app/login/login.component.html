@@ -1,0 +1,28 @@
+<ActionBar title="Login"></ActionBar>
+
+<StackLayout orientation="vertical">
+    <TextField hint="Username"
+               [(ngModel)]='username'
+               #usernameId
+               name="username"
+               ngDefaultControl
+               secure="false"
+               returnKeyType="next"
+               autocorrect="false"
+               class="m-15"
+               maxLength="12">
+    </TextField>
+    <TextField hint="Password"
+               [(ngModel)]='password'
+               #passwordId
+               name="password"
+               ngDefaultControl
+               secure="true"
+               returnKeyType="next"
+               autocorrect="false">
+    </TextField>
+    <Label class="m-15" *ngIf="error" text="Something went wrong. Check your username and password, then try again" [textWrap]="true"></Label>
+    <Label class="m-15" *ngIf="error" [text]="error | json" [textWrap]="true"></Label>
+    <Button text="Login" (tap)="login()"></Button>
+    <Button text="Register" nsRouterLink="/register"></Button>
+</StackLayout>

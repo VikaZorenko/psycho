@@ -1,0 +1,41 @@
+<ActionBar title="Register"></ActionBar>
+
+<StackLayout orientation="vertical">
+    <TextField hint="Username"
+               [(ngModel)]='username'
+               secure="false"
+               #usernameId
+               name="username"
+               ngDefaultControl
+               returnKeyType="next"
+               autocorrect="false"
+               class="m-15"
+               maxLength="12">
+    </TextField>
+    <TextField hint="Email"
+               [(ngModel)]='email'
+               keyboardType="email"
+               #emailId
+               name="email"
+               ngDefaultControl
+               autocapitalizationType="none"
+               secure="false"
+               returnKeyType="next"
+               autocorrect="false"
+               class="m-15">
+    </TextField>
+    <TextField hint="Password"
+               [(ngModel)]='password'
+               #passwordId
+               secure="true"
+               name="password"
+               ngDefaultControl
+               returnKeyType="next"
+               class="m-15"
+               autocorrect="false">
+    </TextField>
+    <Label class="m-15" *ngIf="error" text="Something went wrong. Check your form and try again."></Label>
+    <Label class="m-15" *ngIf="error" [text]="error | json" [textWrap]="true"></Label>
+    <Label class="m-15" *ngIf="error" [text]="form | json" [textWrap]="true"></Label>
+    <Button text="Register" (tap)="register()"></Button>
+</StackLayout>

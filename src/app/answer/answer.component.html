@@ -1,0 +1,11 @@
+
+<StackLayout class="m-15" *ngIf="question">
+    <Label class="h2" [text]="question.name" textWrap="true" minHeight="150"></Label>
+    <ListView [items]="question.answers">
+        <ng-template let-item="item">
+            <StackLayout>
+                <Button [text]="item.name" (tap)="answer(item.id)"></Button>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+</StackLayout>
