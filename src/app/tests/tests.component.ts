@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { MOCK_TEST, Test } from '~/app/app.types';
+import {LoginResponce, MOCK_TEST, Test} from '~/app/app.types';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { ApiService } from '~/app/api.service';
 import { AppService } from '~/app/app.service';
@@ -12,14 +12,17 @@ import { of } from 'rxjs';
 })
 export class TestsComponent implements OnInit {
     tests: Test[] = null;
+    user: LoginResponce = null;
 
     constructor(
         private routerExtensions: RouterExtensions,
         private apiService: ApiService,
-        private appService: AppService,
+        public appService: AppService,
     ) { }
 
     ngOnInit(): void {
+        this.user = this.apiService.restoreData('user');
+        this.appService.loadAvatar(this.user.username);
         this.apiService.testList()
             .subscribe(tests => this.tests = tests);
     }

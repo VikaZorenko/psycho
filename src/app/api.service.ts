@@ -8,7 +8,7 @@ import {
     TestListedResult,
     TestResult
 } from '~/app/app.types';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/internal/operators';
 import {
@@ -41,18 +41,33 @@ export class ApiService {
     }
 
     login(data: Partial<RegisterData>): Observable<LoginResponce> {
-        return this.http.post<LoginResponce>(`${api}token-auth`, data)
-            .pipe(
+        const cacheKey: string = 'user';
+        const cachedData: LoginResponce = this.restoreData(cacheKey);
+        const request$: Observable<LoginResponce> = cachedData
+            ? of(cachedData)
+            : this.http.post<LoginResponce>(`${api}token-auth`, data);
+
+        return request$.pipe(
                 tap(res => {
-                    console.log('login', res)
+                    this.cacheData(cacheKey, res);
                     setString(token, res.token);
                 })
             );
     }
 
     testList(): Observable<Test[]> {
-        return this.http.get<Test[]>(`${api}tests`, { headers: this.headers })
-            .pipe(tap(res => console.log('testList', res)));
+        const cacheKey: string = 'tests';
+        const cachedData: Test[] = this.restoreData(cacheKey);
+        const request$: Observable<Test[]> = cachedData
+            ? of(cachedData)
+            : this.http.get<Test[]>(`${api}tests`, { headers: this.headers });
+
+        return request$.pipe(
+            tap(res => {
+                this.cacheData(cacheKey, res);
+                console.log('testList', res);
+            })
+        );
     }
 
     start(testId: string): Observable<TestListedResult> {
@@ -75,12 +90,42 @@ export class ApiService {
     }
 
     testResults(testId: string): Observable<TestListedResult[]> {
-        return this.http.post<TestListedResult[]>(`${api}tests/${testId}/results`, null, { headers: this.headers })
-            .pipe(tap(res => console.log('testResults', res)));
+        const cacheKey: string = `${testId}_results`;
+        const cachedData: TestListedResult[] = this.restoreData(cacheKey);
+        const request$: Observable<TestListedResult[]> = cachedData
+            ? of(cachedData)
+            : this.http.post<TestListedResult[]>(`${api}tests/${testId}/results`, null, { headers: this.headers });
+
+        return request$.pipe(
+            tap(res => {
+                this.cacheData(cacheKey, res);
+                console.log('testResults', res);
+            })
+        );
     }
 
     testResult(testId: string, resultId: string): Observable<TestResult> {
-        return this.http.post<TestResult>(`${api}tests/${testId}/results/${resultId}`, null, { headers: this.headers })
-            .pipe(tap(res => console.log('testResult', res)));
+        const cacheKey: string = `${testId}_result_${resultId}`;
+        const cachedData: TestResult = this.restoreData(cacheKey);
+        const request$: Observable<TestResult> = cachedData
+            ? of(cachedData)
+            : this.http.post<TestResult>(`${api}tests/${testId}/results/${resultId}`, null, { headers: this.headers });
+
+        return request$.pipe(
+            tap(res => {
+                this.cacheData(cacheKey, res);
+                console.log('testResult', res);
+            })
+        );
+    }
+
+    restoreData(key: string): any {
+        const jsonData = getString(key, null);
+        return jsonData ? JSON.parse(jsonData) : null;
+    }
+
+    private cacheData(key: string, data: any): void {
+        const jsonData = JSON.stringify(data);
+        setString(key, jsonData);
     }
 }

@@ -11,6 +11,17 @@ The ActionBar is the NativeScript common abstraction over the Android ActionBar 
 http://docs.nativescript.org/ui/action-bar
 -->
 <ActionBar title="Test attempts">
+    <ActionItem android.position="actionBar">
+        <Label [text]="user?.username"></Label>
+    </ActionItem>
+    <ActionItem (tap)="appService.makeAvatar(user?.username)"
+                android.systemIcon="ic_menu_camera"
+                android.position="actionBar">
+        <Image *ngIf="appService.image.value" [imageSource]="appService.image.value"  width="50" borderRadius="50"></Image>
+    </ActionItem>
+    <ActionItem (tap)="logout()"
+                android.systemIcon="ic_menu_blocked_user"
+                android.position="actionBar"></ActionItem>
 </ActionBar>
 
 <!--

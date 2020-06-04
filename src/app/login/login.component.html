@@ -21,8 +21,8 @@
                returnKeyType="next"
                autocorrect="false">
     </TextField>
-    <Label class="m-15" *ngIf="error" text="Something went wrong. Check your username and password, then try again" [textWrap]="true"></Label>
-    <Label class="m-15" *ngIf="error" [text]="error | json" [textWrap]="true"></Label>
     <Button text="Login" (tap)="login()"></Button>
     <Button text="Register" nsRouterLink="/register"></Button>
+    <Label class="m-15" *ngIf="error" text="Something went wrong. Check your username and password, then try again" [textWrap]="true"></Label>
+    <Label class="m-15" *ngIf="error" [text]="error | json" [textWrap]="true"></Label>
 </StackLayout>

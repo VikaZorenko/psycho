@@ -15,12 +15,12 @@ export class LoginComponent implements OnInit {
     constructor(
         private routerExtensions: RouterExtensions,
         private apiService: ApiService,
-        private appService: AppService,
+        public appService: AppService,
     ) { }
 
     ngOnInit(): void {
         if (this.appService.loggedIn) {
-            this.proceed();
+            this.login();
         }
     }
 

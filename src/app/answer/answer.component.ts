@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AskedQuestion, MOCK_ASKED_QUESTION, MOCK_TEST, Test } from '~/app/app.types';
+import {AskedQuestion, LoginResponce, MOCK_ASKED_QUESTION, MOCK_TEST, Test} from '~/app/app.types';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { ApiService } from '~/app/api.service';
 import { AppService } from '~/app/app.service';
@@ -12,14 +12,16 @@ import { catchError, tap } from 'rxjs/internal/operators';
 })
 export class AnswerComponent implements OnInit {
     question: AskedQuestion = null;
+    user: LoginResponce = null;
 
     constructor(
         private routerExtensions: RouterExtensions,
         private apiService: ApiService,
-        private appService: AppService,
+        public appService: AppService,
     ) { }
 
     ngOnInit(): void {
+        this.user = this.apiService.restoreData('user');
         this.nextQuestion();
     }
 
@@ -56,5 +58,10 @@ export class AnswerComponent implements OnInit {
 
     end() {
         this.routerExtensions.navigate(['/results', this.appService.resultId]);
+    }
+
+    logout() {
+        this.appService.logout();
+        this.routerExtensions.navigate(['/login']);
     }
 }
